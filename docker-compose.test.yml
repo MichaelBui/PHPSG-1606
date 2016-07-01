@@ -1,0 +1,36 @@
+version: '2'
+services:
+  phpunit:
+    image: gigary/phpunit:5.4.6
+    networks:
+      - phpsg-test
+    volumes:
+      - ./src:/var/www
+    links:
+      - database
+    depends_on:
+      - database-restore
+    command: phpunit -c /var/www/phpunit.xml
+  database-restore:
+    image: gigary/mariadb-client:10.1
+    networks:
+      - phpsg-test
+    volumes:
+      - ./data/db.sql:/tmp/db.sql
+      - ./data/mysql-client.sh:/tmp/script.sh
+    links:
+      - database
+    depends_on:
+      - database
+    command: /tmp/script.sh
+  database:
+    image: gigary/mariadb:10.1
+    networks:
+      - phpsg-test
+    volumes:
+      - ./data/db.sql:/tmp/db.sql
+    expose:
+      - 3306
+networks:
+  phpsg-test:
+    driver: bridge

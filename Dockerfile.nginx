@@ -1,0 +1,5 @@
+FROM gigary/nginx:1.8
+MAINTAINER Michael Bui <mf.michaelbui@gmail.com>
+
+ADD ./src /var/www
+ADD ./data/nginx.conf /etc/nginx/nginx.conf
